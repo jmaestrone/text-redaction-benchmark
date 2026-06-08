@@ -1,0 +1,13 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local input/output artifacts. These paths are intentionally untracked.
+input-videos/
+data/frames/
+data/predictions/
+runs/
+models/
+temp/

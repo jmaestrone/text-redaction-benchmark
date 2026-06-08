@@ -1,0 +1,14 @@
+[project]
+name = "text-redaction-benchmark"
+version = "0.1.0"
+description = "Offline text detection and redaction benchmark workflows."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+text-redact = "text_redaction_benchmark.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8.10,<0.9.0"]
+build-backend = "uv_build"

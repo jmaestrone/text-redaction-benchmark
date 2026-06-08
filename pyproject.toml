@@ -6,6 +6,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 
+[project.optional-dependencies]
+paddleocr = [
+    "paddleocr>=3.0.3",
+]
+
 [project.scripts]
 text-redact = "text_redaction_benchmark.cli:main"
 

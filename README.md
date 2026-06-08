@@ -30,6 +30,15 @@ Keep local research notes, plans, videos, model weights, predictions, redacted o
 
 ```bash
 uv run text-redact --help
+uv run text-redact detect-text --help
 ```
 
-The current CLI only registers the public command surface. Detector and redaction implementations will be added in later checkpoints.
+The `detect-text` command is registered for PaddleOCR-oriented options. Artifact-writing image and video workflows will be added in later checkpoints.
+
+## PaddleOCR Detector
+
+The first detector adapter targets PaddleOCR text detection with the default `PP-OCRv5_server_det` model. PaddleOCR is an optional dependency because model-backed local inference can download model weights and needs environment-specific PaddlePaddle setup.
+
+```bash
+uv sync --extra paddleocr
+```

@@ -4,6 +4,13 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Sequence
+from pathlib import Path
+
+from text_redaction_benchmark.paddleocr_detector import (
+    PaddleOCRTextDetector,
+    PaddleOCRTextDetectorConfig,
+)
+from text_redaction_benchmark.video import VideoRedactionConfig, redact_video_offline
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -102,6 +109,80 @@ def build_parser() -> argparse.ArgumentParser:
         default=0.0,
         help="Relative polygon expansion ratio before masking.",
     )
+    redact_video_parser = subparsers.add_parser(
+        "redact-video",
+        help="Redact detected text in every frame of a local video.",
+        description=(
+            "Process every frame offline with PaddleOCR text detection, apply solid "
+            "text masks, and write redaction artifacts under runs/redactions."
+        ),
+    )
+    redact_video_parser.add_argument(
+        "video",
+        help="Input video path.",
+    )
+    redact_video_parser.add_argument(
+        "--output-root",
+        default="runs/redactions",
+        help="Root directory for redaction run artifacts.",
+    )
+    redact_video_parser.add_argument(
+        "--run-id",
+        default=None,
+        help="Optional run id. Defaults to a timestamp plus input video stem.",
+    )
+    redact_video_parser.add_argument(
+        "--mask-color",
+        choices=("black", "white"),
+        default="black",
+        help="Solid mask color.",
+    )
+    redact_video_parser.add_argument(
+        "--expand-pixels",
+        type=float,
+        default=0.0,
+        help="Absolute polygon expansion in pixels before masking.",
+    )
+    redact_video_parser.add_argument(
+        "--expand-ratio",
+        type=float,
+        default=0.0,
+        help="Relative polygon expansion ratio before masking.",
+    )
+    redact_video_parser.add_argument(
+        "--model-name",
+        default="PP-OCRv5_server_det",
+        help="PaddleOCR text detection model name.",
+    )
+    redact_video_parser.add_argument(
+        "--device",
+        default=None,
+        help='PaddleOCR device string, such as "cpu" or "gpu:0".',
+    )
+    redact_video_parser.add_argument(
+        "--thresh",
+        type=float,
+        default=None,
+        help="Pixel score threshold for text pixels.",
+    )
+    redact_video_parser.add_argument(
+        "--box-thresh",
+        type=float,
+        default=None,
+        help="Detected box score threshold.",
+    )
+    redact_video_parser.add_argument(
+        "--unclip-ratio",
+        type=float,
+        default=None,
+        help="PaddleOCR text region expansion ratio.",
+    )
+    redact_video_parser.add_argument(
+        "--limit-side-len",
+        type=int,
+        default=None,
+        help="Input image side length limit for detection.",
+    )
     return parser
 
 
@@ -119,4 +200,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             "redact-image execution will be wired into artifact-writing workflows "
             "in a later checkpoint; use --help to inspect options."
         )
+    if parsed_args.command == "redact-video":
+        detector_config = PaddleOCRTextDetectorConfig(
+            model_name=parsed_args.model_name,
+            device=parsed_args.device,
+            thresh=parsed_args.thresh,
+            box_thresh=parsed_args.box_thresh,
+            unclip_ratio=parsed_args.unclip_ratio,
+            limit_side_len=parsed_args.limit_side_len,
+        )
+        video_config = VideoRedactionConfig(
+            input_video=Path(parsed_args.video),
+            output_root=Path(parsed_args.output_root),
+            run_id=parsed_args.run_id,
+            mask_color=parsed_args.mask_color,
+            expand_pixels=parsed_args.expand_pixels,
+            expand_ratio=parsed_args.expand_ratio,
+        )
+        result = redact_video_offline(
+            video_config, PaddleOCRTextDetector(detector_config)
+        )
+        print(result.paths.run_dir)
     return 0

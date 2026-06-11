@@ -39,9 +39,33 @@ def build_parser() -> argparse.ArgumentParser:
         help="Image path to process in a later checkpoint.",
     )
     detect_text_parser.add_argument(
+        "--detector",
+        choices=("paddleocr", "rfdetr"),
+        default="paddleocr",
+        help="Text detector backend. PaddleOCR remains the default.",
+    )
+    detect_text_parser.add_argument(
         "--model-name",
         default="PP-OCRv5_server_det",
         help="PaddleOCR text detection model name.",
+    )
+    detect_text_parser.add_argument(
+        "--rfdetr-model-size",
+        choices=("nano", "small", "medium", "large"),
+        default="medium",
+        help="RF-DETR model size for the box-based text baseline.",
+    )
+    detect_text_parser.add_argument(
+        "--rfdetr-threshold",
+        type=float,
+        default=0.5,
+        help="RF-DETR detection threshold.",
+    )
+    detect_text_parser.add_argument(
+        "--rfdetr-text-class-id",
+        type=int,
+        default=0,
+        help="RF-DETR class id treated as text. Use one-class text models by default.",
     )
     detect_text_parser.add_argument(
         "--device",

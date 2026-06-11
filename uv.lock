@@ -1598,6 +1598,9 @@ wheels = [
 name = "text-redaction-benchmark"
 version = "0.1.0"
 source = { editable = "." }
+dependencies = [
+    { name = "pillow" },
+]
 
 [package.optional-dependencies]
 paddleocr = [
@@ -1605,7 +1608,10 @@ paddleocr = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "paddleocr", marker = "extra == 'paddleocr'", specifier = ">=3.0.3" }]
+requires-dist = [
+    { name = "paddleocr", marker = "extra == 'paddleocr'", specifier = ">=3.0.3" },
+    { name = "pillow", specifier = ">=11.0.0" },
+]
 provides-extras = ["paddleocr"]
 
 [[package]]

@@ -36,6 +36,20 @@ class CliSmokeTest(unittest.TestCase):
         self.assertIn("--model-name", output)
         self.assertIn("--box-thresh", output)
 
+    def test_redact_image_help_includes_solid_mask_options(self) -> None:
+        """Check that redact-image help exposes solid masking options."""
+        parser = build_parser()
+
+        with io.StringIO() as stdout:
+            with self.assertRaises(SystemExit) as raised, redirect_stdout(stdout):
+                parser.parse_args(["redact-image", "--help"])
+            output = stdout.getvalue()
+
+        self.assertEqual(raised.exception.code, 0)
+        self.assertIn("redact-image", output)
+        self.assertIn("--mask-color", output)
+        self.assertIn("--expand-pixels", output)
+
     def test_main_accepts_empty_arguments(self) -> None:
         """Check that invoking the top-level command without args succeeds."""
         self.assertEqual(main([]), 0)
@@ -45,6 +59,14 @@ class CliSmokeTest(unittest.TestCase):
         with io.StringIO() as stderr:
             with self.assertRaises(SystemExit) as raised, redirect_stderr(stderr):
                 main(["detect-text", "sample.png"])
+
+        self.assertEqual(raised.exception.code, 2)
+
+    def test_redact_image_execution_is_not_wired_yet(self) -> None:
+        """Check that redact-image execution fails loudly until workflows exist."""
+        with io.StringIO() as stderr:
+            with self.assertRaises(SystemExit) as raised, redirect_stderr(stderr):
+                main(["redact-image", "sample.png"])
 
         self.assertEqual(raised.exception.code, 2)
 

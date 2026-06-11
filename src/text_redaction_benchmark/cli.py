@@ -65,6 +65,43 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Input image side length limit for detection.",
     )
+    redact_image_parser = subparsers.add_parser(
+        "redact-image",
+        help="Apply solid masks to detected text regions in an image.",
+        description=(
+            "Apply solid polygon masks to detected text regions in a local image. "
+            "Prediction input and artifact writing will be wired into later workflows."
+        ),
+    )
+    redact_image_parser.add_argument(
+        "image",
+        nargs="?",
+        help="Image path to redact in a later checkpoint.",
+    )
+    redact_image_parser.add_argument(
+        "--mode",
+        choices=("solid",),
+        default="solid",
+        help="Redaction mode. Solid masking is the privacy-first default.",
+    )
+    redact_image_parser.add_argument(
+        "--mask-color",
+        choices=("black", "white"),
+        default="black",
+        help="Solid mask color.",
+    )
+    redact_image_parser.add_argument(
+        "--expand-pixels",
+        type=float,
+        default=0.0,
+        help="Absolute polygon expansion in pixels before masking.",
+    )
+    redact_image_parser.add_argument(
+        "--expand-ratio",
+        type=float,
+        default=0.0,
+        help="Relative polygon expansion ratio before masking.",
+    )
     return parser
 
 
@@ -75,6 +112,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     if parsed_args.command == "detect-text":
         parser.error(
             "detect-text execution will be wired into artifact-writing workflows "
+            "in a later checkpoint; use --help to inspect options."
+        )
+    if parsed_args.command == "redact-image":
+        parser.error(
+            "redact-image execution will be wired into artifact-writing workflows "
             "in a later checkpoint; use --help to inspect options."
         )
     return 0

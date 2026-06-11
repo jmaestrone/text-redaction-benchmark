@@ -59,3 +59,7 @@ The first video workflow processes every frame offline, applies solid text masks
 - `summary.csv`
 
 The current video MVP writes video-only output. Audio preservation is deferred and reported as `audio_preserved: false` in the summary.
+
+## Notebook
+
+`notebooks/text_redaction_workflow.ipynb` is a safe wrapper around CLI commands. All `RUN_*` flags default to `False`; the notebook should not process videos, download models, or write artifacts unless a flag is explicitly enabled.

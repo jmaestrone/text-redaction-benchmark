@@ -36,8 +36,10 @@ class CliSmokeTest(unittest.TestCase):
 
         self.assertEqual(raised.exception.code, 0)
         self.assertIn("detect-text", output)
+        self.assertIn("--detector", output)
         self.assertIn("--model-name", output)
         self.assertIn("--box-thresh", output)
+        self.assertIn("--rfdetr-model-size", output)
 
     def test_redact_image_help_includes_solid_mask_options(self) -> None:
         """Check that redact-image help exposes solid masking options."""

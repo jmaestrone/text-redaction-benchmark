@@ -45,6 +45,16 @@ The first detector adapter targets PaddleOCR text detection with the default `PP
 uv sync --extra paddleocr
 ```
 
+## RF-DETR Baseline
+
+RF-DETR is supported as a later box-based text detection baseline. It is not the default detector and it normalizes `xyxy` boxes into rectangular text polygons for shared redaction workflows.
+
+Install RF-DETR separately when running this baseline locally:
+
+```bash
+uv pip install rfdetr
+```
+
 ## Image Redaction
 
 The first redaction implementation applies opaque solid masks to detected text polygons. Solid masking is the privacy-first default; blur and pixelation are intentionally deferred.

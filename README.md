@@ -2,7 +2,7 @@
 
 CLI-first workflows for offline text detection and redaction on images and videos.
 
-This repository is separate from the face detection benchmark. The face benchmark can inform workflow shape, artifact hygiene, and reporting patterns, but this project has text-specific model choices, geometry, and privacy defaults.
+The project focuses on local, offline workflows that detect text regions, write prediction artifacts, and redact detected text from images or videos.
 
 ## MVP Direction
 

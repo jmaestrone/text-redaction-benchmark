@@ -32,9 +32,10 @@ Keep local research notes, plans, videos, model weights, predictions, redacted o
 uv run text-redact --help
 uv run text-redact detect-text --help
 uv run text-redact redact-image --help
+uv run text-redact redact-video --help
 ```
 
-The `detect-text` and `redact-image` commands are registered for PaddleOCR-oriented detection options and solid image masking options. Artifact-writing image and video workflows will be added in later checkpoints.
+The `detect-text` and `redact-image` commands are registered for PaddleOCR-oriented detection options and solid image masking options. The `redact-video` command runs the first artifact-writing workflow.
 
 ## PaddleOCR Detector
 
@@ -47,3 +48,14 @@ uv sync --extra paddleocr
 ## Image Redaction
 
 The first redaction implementation applies opaque solid masks to detected text polygons. Solid masking is the privacy-first default; blur and pixelation are intentionally deferred.
+
+## Video Redaction
+
+The first video workflow processes every frame offline, applies solid text masks, and writes local artifacts under `runs/redactions/<run-id>/`:
+
+- `predictions/text_regions.jsonl`
+- `redacted/<video-name>.mp4`
+- `summary.json`
+- `summary.csv`
+
+The current video MVP writes video-only output. Audio preservation is deferred and reported as `audio_preserved: false` in the summary.

@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Offline text detection and redaction benchmark workflows."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pillow>=11.0.0",
+]
 
 [project.optional-dependencies]
 paddleocr = [
